@@ -13,7 +13,7 @@ from app.core.db import Base
 
 
 from app.models.user import User
-
+from app.models.donation import Donation
 
 load_dotenv('.env')
 # this is the Alembic Config object, which provides

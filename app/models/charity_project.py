@@ -1,4 +1,7 @@
+from datetime import datetime
+
 from sqlalchemy import Column, String, Text, Integer, Boolean, DateTime
+from sqlalchemy.orm import relationship
 
 from app.core.db import Base
 
@@ -11,3 +14,4 @@ class CharityProject(Base):
     fully_invested = Column(Boolean)
     create_date = Column(DateTime)
     close_date = Column(DateTime)
+    donations = relationship('Donation')

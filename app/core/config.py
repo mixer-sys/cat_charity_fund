@@ -6,12 +6,12 @@ from pydantic import BaseSettings, EmailStr
 class Settings(BaseSettings):
     app_title: str = 'Фонд пожертвований для котиков'
     description: str = 'Описание проекта'
-    database_url: str
+    database_url: str = 'sqlite+aiosqlite:///./fastapi.db'
     secret: str = 'SECRET'
     first_superuser_email: Optional[EmailStr] = None
     first_superuser_password: Optional[str] = None
     app_author: str
-    db_url: str = 'postgres://login:password@127.0.0.1:5432/qrkot'
+    db_url: str = 'sqlite+aiosqlite:///./fastapi.db'
     path: str
 
     class Config:
