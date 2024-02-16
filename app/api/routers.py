@@ -15,10 +15,3 @@ main_router.include_router(
     donation_router, prefix='/donation', tags=['Donation']
 )
 main_router.include_router(user_router)
-'''
-main_router.include_router(
-    reservation_router, prefix='/reservations', tags=['Reservations']
-)
-
-
-'''

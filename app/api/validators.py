@@ -1,6 +1,3 @@
-# app/api/validators.py
-from typing import Optional
-
 from fastapi import HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 

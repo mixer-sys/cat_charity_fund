@@ -11,12 +11,10 @@ from app.api.validators import (
     is_closed
 )
 from app.core.db import get_async_session
-# Вместо импортов 6 функций импортируйте объект charity_project_crud.
 from app.crud.charity_project import charity_project_crud
 from app.core.user import current_superuser
 from app.services.invest import invest
 from app.schemas.charity_project import (
-    CharityProjectBase,
     CharityProjectUpdateResponse,
     CharityProjectCreate,
     CharityProjectUpdate,
@@ -77,7 +75,7 @@ async def partially_update_charity_project(
 
     if obj_in.name is not None:
         await check_name_duplicate(obj_in.name, session)
-    # Замените вызов функции на вызов метода.
+
     charity_project = await charity_project_crud.update(
         charity_project, obj_in, session
     )

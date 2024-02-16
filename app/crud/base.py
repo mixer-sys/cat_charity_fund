@@ -39,10 +39,11 @@ class CRUDBase:
             user: Optional[User] = None
     ):
         obj_in_data = obj_in.dict()
+
         obj_in_data['create_date'] = datetime.now()
-        #obj_in_data['close_date'] = datetime.now()
         obj_in_data['invested_amount'] = 0
         obj_in_data['fully_invested'] = False
+
         if user is not None:
             obj_in_data['user_id'] = user.id
         db_obj = self.model(**obj_in_data)

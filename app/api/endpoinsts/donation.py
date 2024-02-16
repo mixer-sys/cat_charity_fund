@@ -11,8 +11,6 @@ from app.schemas.donation import (
     DonationCreateResponse
 )
 from app.crud.donation import donation_crud
-from app.api.validators import check_charity_project_exists
-from app.crud.donation import donation_crud
 from app.services.invest import invest
 
 router = APIRouter()

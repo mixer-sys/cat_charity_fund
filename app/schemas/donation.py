@@ -1,21 +1,11 @@
-from datetime import datetime, timedelta
+from datetime import datetime
 from typing import Optional
 
-from pydantic import BaseModel, Extra, root_validator, validator, Field
-
-
-FROM_TIME = (
-    datetime.now() + timedelta(minutes=10)
-).isoformat(timespec='minutes')
-
-TO_TIME = (
-    datetime.now() + timedelta(hours=1)
-).isoformat(timespec='minutes')
+from pydantic import BaseModel, Extra, validator, Field
 
 
 class DonationBase(BaseModel):
-    create_date: datetime = Field(..., example=FROM_TIME)
-    #close_date: Optional[datetime] = Field(..., example=TO_TIME)
+    create_date: datetime = Field(..., example=datetime.now())
 
     class Config:
         extra = Extra.forbid
@@ -23,23 +13,6 @@ class DonationBase(BaseModel):
 
 class DonationUpdate(DonationBase):
     ...
-    #@validator('create_date')
-    #def check_from_reserve_later_than_now(cls, value):
-    #    if value <= datetime.now():
-    #        raise ValueError(
-    #            'Время начала бронирования '
-    #            'не может быть меньше текущего времени'
-    #        )
-    #    return value
-
-    #@root_validator(skip_on_failure=True)
-    #def check_from_reserve_before_to_reserve(cls, values):
-    #    if values['from_reserve'] >= values['to_reserve']:
-    #        raise ValueError(
-    #            'Время начала бронирования '
-    #            'не может быть больше времени окончания'
-    #        )
-    #    return values
 
 
 class DonationCreate(BaseModel):

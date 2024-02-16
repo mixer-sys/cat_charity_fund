@@ -12,7 +12,6 @@ class CharityProjectBase(BaseModel):
     invested_amount: Optional[int]
     fully_invested: Optional[bool]
     create_date: Optional[datetime]
-    #close_date: Optional[datetime] = Field(datetime.now())
 
     class Config:
         extra = Extra.forbid
