@@ -1,8 +1,8 @@
 """for bypass tests
 
-Revision ID: e6c3d4e4bbb6
-Revises: 6a96bfb87bd7
-Create Date: 2024-02-16 08:25:50.469873
+Revision ID: 8de45342dab6
+Revises: 3e1847aa60d9
+Create Date: 2024-02-16 23:23:26.713042
 
 """
 from alembic import op
@@ -10,8 +10,8 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'e6c3d4e4bbb6'
-down_revision = '6a96bfb87bd7'
+revision = '8de45342dab6'
+down_revision = '3e1847aa60d9'
 branch_labels = None
 depends_on = None
 

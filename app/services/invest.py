@@ -28,7 +28,7 @@ async def invest(
         )
     )
     projects = projects.scalars().all()
-    print(projects)
+
     for project in projects:
         if project.invested_amount is None:
             project.invested_amount = 0

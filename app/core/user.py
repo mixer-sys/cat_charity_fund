@@ -10,6 +10,12 @@ from fastapi_users.authentication import (
 from fastapi_users_db_sqlalchemy import SQLAlchemyUserDatabase
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.core.constants import (
+    PASSWORD_LEN_MORE_THREE,
+    PASSWORD_CANT_CONTAINS_EMAIL,
+    USER_REGISTERED,
+    JWT_LIFETIME_SECONDS
+)
 from app.core.config import settings
 from app.core.db import get_async_session
 from app.models.user import User
@@ -23,7 +29,8 @@ bearer_transport = BearerTransport(tokenUrl='auth/jwt/login')
 
 
 def get_jwt_strategy() -> JWTStrategy:
-    return JWTStrategy(secret=settings.secret, lifetime_seconds=3600)
+    return JWTStrategy(secret=settings.secret,
+                       lifetime_seconds=JWT_LIFETIME_SECONDS)
 
 
 auth_backend = AuthenticationBackend(
@@ -42,17 +49,17 @@ class UserManager(IntegerIDMixin, BaseUserManager[User, int]):
     ) -> None:
         if len(password) < 3:
             raise InvalidPasswordException(
-                reason='Password should be at least 3 characters'
+                reason=PASSWORD_LEN_MORE_THREE
             )
         if user.email in password:
             raise InvalidPasswordException(
-                reason='Password should not contain e-mail'
+                reason=PASSWORD_CANT_CONTAINS_EMAIL
             )
 
     async def on_after_register(
             self, user: User, request: Optional[Request] = None
     ):
-        print(f'Пользователь {user.email} зарегистрирован.')
+        print(USER_REGISTERED.substitute(user_email=user.email))
 
 
 async def get_user_manager(user_db=Depends(get_user_db)):
@@ -61,7 +68,7 @@ async def get_user_manager(user_db=Depends(get_user_db)):
 
 fastapi_users = FastAPIUsers[User, int](
     get_user_manager,
-    [auth_backend],
+    (auth_backend,),
 )
 
 

@@ -1,18 +1,11 @@
 from datetime import datetime
 from typing import Optional
 
-from pydantic import BaseModel, Extra, validator, Field
+from pydantic import BaseModel, validator
 
-
-class DonationBase(BaseModel):
-    create_date: datetime = Field(..., example=datetime.now())
-
-    class Config:
-        extra = Extra.forbid
-
-
-class DonationUpdate(DonationBase):
-    ...
+from app.core.constants import (
+    FULL_AMOUNT_SHOUL_BE_POSITIVE_INT
+)
 
 
 class DonationCreate(BaseModel):
@@ -23,37 +16,27 @@ class DonationCreate(BaseModel):
     def check_full_amount_more_one(cls, value):
         if value < 1:
             raise ValueError(
-                'Требуемая сумма (full_amount)'
-                ' проекта должна быть целочисленной'
-                ' и больше 0.'
+                FULL_AMOUNT_SHOUL_BE_POSITIVE_INT
             )
         return value
 
-    class Config:
-        extra = Extra.forbid
 
-
-class DonationCreateResponse(BaseModel):
-    id: int
-    full_amount: Optional[int]
-    create_date: Optional[datetime]
+class DonationDB(BaseModel):
     comment: Optional[str]
+    create_date: Optional[datetime]
+    full_amount: Optional[int]
+    id: int
 
     class Config:
         orm_mode = True
 
 
-class DonationGetAll(BaseModel):
-    comment: Optional[str]
-    create_date: Optional[datetime]
+class DonationGetAll(DonationDB):
     full_amount: Optional[int]
     fully_invested: Optional[bool]
     id: int
     invested_amount: Optional[int]
     user_id: int
-
-    class Config:
-        orm_mode = True
 
     @validator('fully_invested')
     def set_fully_invested(cls, name):
@@ -62,13 +45,3 @@ class DonationGetAll(BaseModel):
     @validator('invested_amount')
     def set_invested_amount(cls, name):
         return name or 0
-
-
-class DonationDB(DonationBase):
-    comment: Optional[str]
-    create_date: Optional[datetime]
-    full_amount: Optional[int]
-    id: int
-
-    class Config:
-        orm_mode = True

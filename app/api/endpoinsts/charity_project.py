@@ -5,22 +5,21 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.api.validators import (
     check_charity_project_exists,
     check_name_duplicate,
+    is_closed,
     is_fully_invested,
-    is_partially_invested,
     is_invested_amount_more_full,
-    is_closed
+    is_partially_invested
 )
 from app.core.db import get_async_session
-from app.crud.charity_project import charity_project_crud
 from app.core.user import current_superuser
-from app.services.invest import invest
+from app.crud.charity_project import charity_project_crud
 from app.schemas.charity_project import (
-    CharityProjectUpdateResponse,
     CharityProjectCreate,
-    CharityProjectUpdate,
-    CharityProjectDelete,
-    CharityProjectDB
+    CharityProjectDB,
+    CharityProjectUpdate
 )
+from app.services.invest import invest
+
 
 router = APIRouter()
 
@@ -41,7 +40,7 @@ async def get_all_charity_projects(
     '/',
     response_model=CharityProjectDB,
     response_model_exclude_none=True,
-    dependencies=[Depends(current_superuser)],
+    dependencies=(Depends(current_superuser),),
 )
 async def create_new_charity_project(
         charity_project: CharityProjectCreate,
@@ -57,9 +56,9 @@ async def create_new_charity_project(
 
 @router.patch(
     '/{project_id}',
-    response_model=CharityProjectUpdateResponse,
+    response_model=CharityProjectDB,
     response_model_exclude_none=False,
-    dependencies=[Depends(current_superuser)],
+    dependencies=(Depends(current_superuser),),
 )
 async def partially_update_charity_project(
     project_id: int,
@@ -83,20 +82,20 @@ async def partially_update_charity_project(
 
 
 @router.delete(
-    '/{charity_project_id}',
-    response_model=CharityProjectDelete,
+    '/{project_id}',
+    response_model=CharityProjectDB,
     response_model_exclude_none=False,
-    dependencies=[Depends(current_superuser)],
+    dependencies=(Depends(current_superuser),),
 )
 async def remove_charity_project(
-    charity_project_id: int,
+    project_id: int,
     session: AsyncSession = Depends(get_async_session),
 ):
     """Только для суперюзеров."""
-    charity_project = await check_charity_project_exists(charity_project_id, session)
+    charity_project = await check_charity_project_exists(project_id, session)
 
-    await is_closed(charity_project_id, session)
-    await is_fully_invested(charity_project_id, session)
-    await is_partially_invested(charity_project_id, session)
+    await is_closed(project_id, session)
+    await is_fully_invested(project_id, session)
+    await is_partially_invested(project_id, session)
     charity_project = await charity_project_crud.remove(charity_project, session)
     return charity_project
