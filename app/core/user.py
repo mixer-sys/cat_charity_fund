@@ -11,10 +11,10 @@ from fastapi_users_db_sqlalchemy import SQLAlchemyUserDatabase
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.constants import (
+    JWT_LIFETIME_SECONDS,
     PASSWORD_LEN_MORE_THREE,
     PASSWORD_CANT_CONTAINS_EMAIL,
-    USER_REGISTERED,
-    JWT_LIFETIME_SECONDS
+    USER_REGISTERED
 )
 from app.core.config import settings
 from app.core.db import get_async_session

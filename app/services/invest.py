@@ -7,6 +7,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.models.charity_project import CharityProject
 from app.models.donation import Donation
 
+
 MODEL_CHOISE = {
     Donation: CharityProject,
     CharityProject: Donation

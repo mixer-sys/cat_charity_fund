@@ -1,11 +1,11 @@
-from typing import Optional
 from datetime import datetime
+from typing import Optional
 
-from pydantic import BaseModel, Field, validator, Extra, root_validator
+from pydantic import BaseModel, Extra, Field, root_validator, validator
 
 from app.core.constants import (
-    FULL_AMOUNT_SHOUL_BE_POSITIVE_INT,
     FULL_AMOUNT_SHOUL_BE_MORE_INVESTED_AMOUNT,
+    FULL_AMOUNT_SHOUL_BE_POSITIVE_INT,
     MAX_LENGTH,
     MIN_LENGTH
 )
