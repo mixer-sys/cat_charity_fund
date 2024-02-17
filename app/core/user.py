@@ -1,3 +1,4 @@
+import logging
 from typing import Optional, Union
 
 from fastapi import Depends, Request
@@ -11,7 +12,6 @@ from fastapi_users_db_sqlalchemy import SQLAlchemyUserDatabase
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.constants import (
-    JWT_LIFETIME_SECONDS,
     PASSWORD_LEN_MORE_THREE,
     PASSWORD_CANT_CONTAINS_EMAIL,
     USER_REGISTERED
@@ -22,6 +22,9 @@ from app.models.user import User
 from app.schemas.user import UserCreate
 
 
+logging.basicConfig(level=logging.INFO)
+
+
 async def get_user_db(session: AsyncSession = Depends(get_async_session)):
     yield SQLAlchemyUserDatabase(session, User)
 
@@ -30,7 +33,7 @@ bearer_transport = BearerTransport(tokenUrl='auth/jwt/login')
 
 def get_jwt_strategy() -> JWTStrategy:
     return JWTStrategy(secret=settings.secret,
-                       lifetime_seconds=JWT_LIFETIME_SECONDS)
+                       lifetime_seconds=settings.jwt_lifetime_seconds)
 
 
 auth_backend = AuthenticationBackend(
@@ -59,7 +62,7 @@ class UserManager(IntegerIDMixin, BaseUserManager[User, int]):
     async def on_after_register(
             self, user: User, request: Optional[Request] = None
     ):
-        print(USER_REGISTERED.substitute(user_email=user.email))
+        logging.info(USER_REGISTERED.format(user_email=user.email))
 
 
 async def get_user_manager(user_db=Depends(get_user_db)):

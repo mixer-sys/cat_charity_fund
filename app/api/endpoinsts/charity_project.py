@@ -31,8 +31,11 @@ router = APIRouter()
 async def get_all_charity_projects(
         session: AsyncSession = Depends(get_async_session),
 ):
-    all_charity_projects = await charity_project_crud.get_multi(session)
-    return all_charity_projects
+    return (
+        await charity_project_crud.get_multi(
+            session
+        )
+    )
 
 
 @router.post(
@@ -48,7 +51,8 @@ async def create_new_charity_project(
     """Только для суперюзеров."""
     await check_name_duplicate(charity_project.name, session)
 
-    charity_project = await charity_project_crud.create(charity_project, session)
+    charity_project = await charity_project_crud.create(
+        charity_project, session)
     await invest(charity_project, session)
     return charity_project
 
@@ -69,15 +73,16 @@ async def partially_update_charity_project(
         project_id, session
     )
     await is_fully_invested(project_id, session)
-    await is_invested_amount_more_full(obj_in, charity_project, session)
+    await is_invested_amount_more_full(
+        obj_in, charity_project, session)
 
     if obj_in.name is not None:
         await check_name_duplicate(obj_in.name, session)
 
-    charity_project = await charity_project_crud.update(
-        charity_project, obj_in, session
+    return (
+        await charity_project_crud.update(
+            charity_project, obj_in, session)
     )
-    return charity_project
 
 
 @router.delete(
@@ -91,10 +96,14 @@ async def remove_charity_project(
     session: AsyncSession = Depends(get_async_session),
 ):
     """Только для суперюзеров."""
-    charity_project = await check_charity_project_exists(project_id, session)
+    charity_project = await check_charity_project_exists(
+        project_id, session)
 
     await is_closed(project_id, session)
     await is_fully_invested(project_id, session)
     await is_partially_invested(project_id, session)
-    charity_project = await charity_project_crud.remove(charity_project, session)
-    return charity_project
+
+    return (
+        await charity_project_crud.remove(
+            charity_project, session)
+    )

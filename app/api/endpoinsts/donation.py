@@ -53,7 +53,8 @@ async def get_my_donations(
         user: User = Depends(current_user)
 ):
     """Получает список всех бронирований для текущего пользователя."""
-    donations = await donation_crud.get_by_user(
-        session=session, user=user
+
+    return (
+        await donation_crud.get_by_user(
+            session=session, user=user)
     )
-    return donations

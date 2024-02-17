@@ -13,6 +13,7 @@ class Settings(BaseSettings):
     app_author: str
     db_url: str = 'sqlite+aiosqlite:///./fastapi.db'
     path: str
+    jwt_lifetime_seconds: int = 3600
 
     class Config:
         env_file = '.env'

@@ -18,7 +18,8 @@ async def check_charity_project_exists(
         charity_project_id: int,
         session: AsyncSession,
 ) -> CharityProject:
-    charity_project = await charity_project_crud.get(charity_project_id, session)
+    charity_project = await charity_project_crud.get(
+        charity_project_id, session)
     if charity_project is None:
         raise HTTPException(
             status_code=HTTPStatus.NOT_FOUND,
@@ -31,7 +32,10 @@ async def check_name_duplicate(
         charity_name: str,
         session: AsyncSession,
 ) -> None:
-    charity_project_id = await charity_project_crud.get_charity_project_id_by_name(charity_name, session)
+    charity_project_id = (
+        await charity_project_crud.get_charity_project_id_by_name(
+            charity_name, session)
+    )
     if charity_project_id is not None:
         raise HTTPException(
             status_code=HTTPStatus.BAD_REQUEST,
@@ -43,7 +47,9 @@ async def is_fully_invested(
         charity_project_id: int,
         session: AsyncSession
 ) -> None:
-    charity_project = await charity_project_crud.get(charity_project_id, session)
+    charity_project = (
+        await charity_project_crud.get(charity_project_id, session)
+    )
     if charity_project.fully_invested:
         raise HTTPException(
             status_code=HTTPStatus.BAD_REQUEST,
@@ -55,7 +61,8 @@ async def is_closed(
         charity_project_id: int,
         session: AsyncSession
 ) -> None:
-    charity_project = await charity_project_crud.get(charity_project_id, session)
+    charity_project = await charity_project_crud.get(
+        charity_project_id, session)
     if charity_project.fully_invested:
         raise HTTPException(
             status_code=HTTPStatus.BAD_REQUEST,
@@ -67,7 +74,8 @@ async def is_partially_invested(
         charity_project_id: int,
         session: AsyncSession
 ) -> None:
-    charity_project = await charity_project_crud.get(charity_project_id, session)
+    charity_project = await charity_project_crud.get(
+        charity_project_id, session)
     if charity_project.invested_amount:
         if charity_project.invested_amount > 0:
             raise HTTPException(
